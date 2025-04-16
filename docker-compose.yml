@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mw-portal-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mw_portal
+      MYSQL_USER: mw_user
+      MYSQL_PASSWORD: mw_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mw-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: mw-portal-api
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - DATABASE_URL=mysql://mw_user:mw_password@mysql:3306/mw_portal
+    ports:
+      - "3003:3002"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - mw-network
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: mw-portal-web
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://api:3002
+    ports:
+      - "3001:3000"
+    depends_on:
+      - api
+    networks:
+      - mw-network
+
+networks:
+  mw-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

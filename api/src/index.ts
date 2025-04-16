@@ -1,5 +1,5 @@
 import express from 'express';
-import { MockUserRepository } from './repositories/user.repository';
+import { PrismaUserRepository } from './repositories/user.repository';
 import { UserService } from './services/user.service';
 import { UserController } from './controllers/user.controller';
 import { createUserRouter } from './routes/user.routes';
@@ -7,7 +7,7 @@ import cors from 'cors';
 
 // Create Express app
 const app = express();
-const port = process.env.PORT || 3002; // Changed to port 3002 to avoid conflicts
+const port = process.env.PORT || 3002;
 
 // Middleware for parsing JSON
 app.use(express.json());
@@ -15,12 +15,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Add CORS middleware to allow requests from frontend
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from Next.js frontend
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'http://web:3000' // Docker service name in production
+    : 'http://localhost:3000', // Local development
   credentials: true
 }));
 
 // Initialize dependencies
-const userRepository = new MockUserRepository();
+const userRepository = new PrismaUserRepository(); // Using Prisma repository instead of mock
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
@@ -35,6 +37,7 @@ app.get('/', (req, res) => {
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+  console.log(`Database URL: ${process.env.DATABASE_URL || 'Not set'}`);
 });
 
 export default app;

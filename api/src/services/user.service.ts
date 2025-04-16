@@ -8,17 +8,17 @@ export class UserService {
     return this.userRepository.findAll();
   }
 
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: number): Promise<User | null> {
     return this.userRepository.findById(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | null> {
-    return this.userRepository.findByUsername(username);
+  async getUserByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findByEmail(email);
   }
 
-  async authenticateUser(username: string, password: string): Promise<User | null> {
-    // Find user by username
-    const user = await this.userRepository.findByUsername(username);
+  async authenticateUser(email: string, password: string): Promise<User | null> {
+    // Find user by email
+    const user = await this.userRepository.findByEmail(email);
     
     // If user not found or password doesn't match, return null
     // In a real application, you would use bcrypt to compare hashed passwords
@@ -34,12 +34,12 @@ export class UserService {
     return this.userRepository.create(userData);
   }
 
-  async updateUser(id: string, userData: Partial<User>): Promise<User | null> {
+  async updateUser(id: number, userData: Partial<User>): Promise<User | null> {
     // You might want to prevent updates to certain fields like password without verification
     return this.userRepository.update(id, userData);
   }
 
-  async deleteUser(id: string): Promise<boolean> {
+  async deleteUser(id: number): Promise<boolean> {
     return this.userRepository.delete(id);
   }
 }

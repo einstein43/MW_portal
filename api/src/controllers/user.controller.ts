@@ -9,14 +9,14 @@ export class UserController {
 
   login = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { username, password } = req.body;
+      const { email, password } = req.body;
       
-      if (!username || !password) {
-        res.status(400).json({ message: 'Username and password are required' });
+      if (!email || !password) {
+        res.status(400).json({ message: 'Email and password are required' });
         return;
       }
 
-      const user = await this.userService.authenticateUser(username, password);
+      const user = await this.userService.authenticateUser(email, password);
       
       if (!user) {
         res.status(401).json({ message: 'Invalid credentials' });
@@ -25,7 +25,7 @@ export class UserController {
 
       // Generate JWT token
       const token = jwt.sign(
-        { id: user.id, username: user.username },
+        { id: user.id, email: user.email },
         JWT_SECRET,
         { expiresIn: '24h' }
       );
@@ -35,8 +35,10 @@ export class UserController {
         token,
         user: {
           id: user.id,
-          username: user.username,
-          email: user.email
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role
         }
       });
     } catch (error) {
@@ -57,7 +59,7 @@ export class UserController {
 
   getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
-      const userId = req.params.id;
+      const userId = parseInt(req.params.id, 10);
       const user = await this.userService.getUserById(userId);
       
       if (user) {
@@ -84,7 +86,7 @@ export class UserController {
 
   updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      const userId = req.params.id;
+      const userId = parseInt(req.params.id, 10);
       const userData = req.body;
       const updatedUser = await this.userService.updateUser(userId, userData);
       
@@ -101,7 +103,7 @@ export class UserController {
 
   deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      const userId = req.params.id;
+      const userId = parseInt(req.params.id, 10);
       const success = await this.userService.deleteUser(userId);
       
       if (success) {

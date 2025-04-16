@@ -36,7 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         }
       }
     } catch (err) {
-      const errorMessage = 'An error occurred during login. Please try again.';
+      const errorMessage = `An error occurred during login: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again.`;
       setError(errorMessage);
       if (onLoginError) {
         onLoginError(errorMessage);

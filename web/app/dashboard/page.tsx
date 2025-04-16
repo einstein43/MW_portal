@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { AuthService, User } from '../../services/auth.service';
 import ProtectedRoute from '../../components/organisms/ProtectedRoute';
-import { ApiService } from '../../services/api.service';
 import styles from './page.module.css';
 
 export default function Dashboard() {

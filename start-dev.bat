@@ -1,23 +1,22 @@
 @echo off
-echo Starting development servers...
+echo Starting MW Portal development environment...
 
-:: Kill any existing processes on ports 3000 and 3002 (if any)
-FOR /F "tokens=5" %%P IN ('netstat -ano ^| findstr :3000') DO (
-  taskkill /PID %%P /F >nul 2>&1
-)
-FOR /F "tokens=5" %%P IN ('netstat -ano ^| findstr :3002') DO (
-  taskkill /PID %%P /F >nul 2>&1
-)
+REM Build the Docker containers
+docker-compose build
 
-:: Start the API server on port 3002
-start cmd /k "cd api && set PORT=3002 && npm run dev"
+REM Run the Docker containers in detached mode
+docker-compose up -d
 
-:: Wait a moment before starting the frontend
-timeout /t 2 > nul
-
-:: Start the frontend on port 3000
-start cmd /k "cd web && npm run dev"
-
-echo Both servers started.
-echo API running on http://localhost:3002
-echo Web running on http://localhost:3000
+echo.
+echo ===========================================
+echo MW Portal Development Environment is running!
+echo ===========================================
+echo.
+echo Services available at:
+echo - Web Application: http://localhost:3000
+echo - API: http://localhost:3002
+echo - MySQL Database: localhost:3306
+echo.
+echo To view logs: docker-compose logs -f
+echo To stop environment: docker-compose down
+echo.
