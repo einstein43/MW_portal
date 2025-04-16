@@ -1,12 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { Project } from '../models/project.model';
 
-// Use the same PrismaClient instance that's created in the user repository
-// In a production app, you would use a shared instance from a database module
-const prisma = new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-});
-
+// Use the singleton PrismaClient instance from the index.ts file
+// to avoid multiple connections
 export interface ProjectRepository {
   findAll(): Promise<Project[]>;
   findById(projectId: number): Promise<Project | null>;
@@ -17,30 +13,39 @@ export interface ProjectRepository {
 }
 
 export class PrismaProjectRepository implements ProjectRepository {
+  private prisma: PrismaClient;
+
+  constructor(prismaClient?: PrismaClient) {
+    // Use the passed PrismaClient or create a new one as fallback (not ideal, but safer)
+    this.prisma = prismaClient || new PrismaClient({
+      log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    });
+  }
+
   async findAll(): Promise<Project[]> {
-    return prisma.project.findMany();
+    return this.prisma.project.findMany();
   }
 
   async findById(projectId: number): Promise<Project | null> {
-    return prisma.project.findUnique({
+    return this.prisma.project.findUnique({
       where: { projectId }
     });
   }
 
   async findByCustomerId(customerId: number): Promise<Project[]> {
-    return prisma.project.findMany({
+    return this.prisma.project.findMany({
       where: { customerId }
     });
   }
 
   async create(projectData: Omit<Project, 'projectId' | 'createdAt' | 'updatedAt'>): Promise<Project> {
-    return prisma.project.create({
+    return this.prisma.project.create({
       data: projectData
     });
   }
 
   async update(projectId: number, projectData: Partial<Project>): Promise<Project | null> {
-    return prisma.project.update({
+    return this.prisma.project.update({
       where: { projectId },
       data: projectData
     });
@@ -48,7 +53,7 @@ export class PrismaProjectRepository implements ProjectRepository {
 
   async delete(projectId: number): Promise<boolean> {
     try {
-      await prisma.project.delete({
+      await this.prisma.project.delete({
         where: { projectId }
       });
       return true;

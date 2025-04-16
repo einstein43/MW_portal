@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AuthService } from './auth.service';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003/api';
+// Ensure the URL doesn't have a trailing slash to prevent double slashes in requests
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
 
 // Create axios instance with base URL
 const apiClient = axios.create({
@@ -18,6 +19,7 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log('Making API request to:', `${config.baseURL}/${config.url}`);
     return config;
   },
   (error) => {
@@ -28,9 +30,17 @@ apiClient.interceptors.request.use(
 // Add a response interceptor to handle auth errors
 apiClient.interceptors.response.use(
   (response) => {
+    console.log('API response received:', response.status);
     return response;
   },
   (error) => {
+    // Don't redirect to login if the request was canceled
+    if (axios.isCancel(error)) {
+      return Promise.reject(error);
+    }
+    
+     
+    
     // Handle 401 Unauthorized or 403 Forbidden responses
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       // Logout and redirect to login page if we're in a browser environment

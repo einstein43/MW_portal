@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { AuthService, User } from "../../services/auth.service";
 import ProtectedRoute from "../../components/organisms/ProtectedRoute";
 import styles from "./page.module.css";
+import ProgressBlock from "@/components/molecules/progress/ProgressBlock";
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -48,8 +49,7 @@ export default function Dashboard() {
           ) : (
             <>
               <div className={styles.welcomeMessage}>
-                <h2>Welkom {user?.email?.split("@")[0] || "User"}!</h2>
-                <p>TEST!!</p>
+                <ProgressBlock></ProgressBlock>
               </div>
             </>
           )}

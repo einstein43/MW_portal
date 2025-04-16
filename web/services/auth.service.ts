@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003/api';
+// Use the same URL format as in api.service.ts for consistency
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
 
 export interface LoginCredentials {
   email: string;  // Changed from 'username' to 'email' to match the backend API

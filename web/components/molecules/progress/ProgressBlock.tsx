@@ -18,28 +18,85 @@ const ProgressBlock: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        // Flag to track if the component is mounted
+        let isMounted = true;
+        
         const fetchProjects = async () => {
             try {
+                // Check authentication first
+                const token = AuthService.getToken();
+                if (!token) {
+                    console.error('No authentication token found');
+                    throw new Error('No authentication token');
+                }
+                
                 const currentUser = AuthService.getCurrentUser();
                 
                 if (!currentUser) {
+                    console.error('User not authenticated');
                     throw new Error('User not authenticated');
                 }
                 
+                console.log('Current user:', currentUser);
+                
                 // Use the user's ID as the customer ID
                 const customerId = parseInt(currentUser.id);
+                if (isNaN(customerId)) {
+                    console.error(`Invalid user ID: ${currentUser.id}`);
+                    throw new Error('Invalid user ID format');
+                }
                 
-                const response = await ApiService.get<Project[]>(`/projects/customer/${customerId}`);
-                setProjects(response.data);
+                console.log(`Fetching projects for customer ID: ${customerId}`);
+                
+                // Add a leading slash to ensure proper URL path resolution
+                const apiEndpoint = `/projects/customer/${customerId}`;
+                console.log('API request URL:', apiEndpoint);
+                
+                // Use an AbortController to cancel the request if needed
+                const controller = new AbortController();
+                const signal = controller.signal;
+                
+                const response = await ApiService.get<Project[]>(apiEndpoint, {
+                    signal
+                });
+                
+                console.log('API response:', response);
+                
+                // Only update state if the component is still mounted
+                if (isMounted) {
+                    setProjects(response.data);
+                }
             } catch (err: any) {
-                console.error('Error fetching projects:', err);
-                setError(err.message || 'Failed to fetch project data');
+                // Only update error state if the component is still mounted
+                // and it's not an abort error
+                if (isMounted && err.name !== 'AbortError') {
+                    console.error('Error fetching projects:', err);
+                    // Log detailed API error information if available
+                    if (err.response) {
+                        console.error('API error details:', {
+                            status: err.response.status,
+                            statusText: err.response.statusText,
+                            data: err.response.data,
+                            message: err.message,
+                            code: err.code
+                        });
+                    }
+                    setError(err.message || 'Failed to fetch project data');
+                }
             } finally {
-                setLoading(false);
+                // Only update loading state if the component is still mounted
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchProjects();
+        
+        // Cleanup function to run when the component unmounts
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     if (loading) return <div className={styles.progressBlock}>Loading project data...</div>;

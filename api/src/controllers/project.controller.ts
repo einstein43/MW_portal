@@ -33,7 +33,17 @@ export class ProjectController {
   getProjectsByCustomerId = async (req: Request, res: Response): Promise<void> => {
     try {
       const customerId = parseInt(req.params.customerId, 10);
+      console.log(`Processing request for customer ID: ${customerId}`);
+      
+      // Validate customer ID is a valid number
+      if (isNaN(customerId)) {
+        console.error(`Invalid customer ID: ${req.params.customerId}`);
+        res.status(400).json({ message: 'Invalid customer ID format' });
+        return;
+      }
+      
       const projects = await this.projectService.getProjectsByCustomerId(customerId);
+      console.log(`Found ${projects.length} projects for customer ID: ${customerId}`);
       
       res.status(200).json(projects);
     } catch (error) {

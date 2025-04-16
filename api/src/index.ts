@@ -27,7 +27,9 @@ app.use(cors({
 }));
 
 // Create a singleton PrismaClient instance
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
 
 async function startServer() {
   try {
@@ -40,8 +42,8 @@ async function startServer() {
     const userService = new UserService(userRepository);
     const userController = new UserController(userService);
 
-    // Initialize project dependencies
-    const projectRepository = new PrismaProjectRepository();
+    // Initialize project dependencies - pass the shared prisma instance
+    const projectRepository = new PrismaProjectRepository(prisma);
     const projectService = new ProjectService(projectRepository);
     const projectController = new ProjectController(projectService);
 
@@ -51,7 +53,7 @@ async function startServer() {
 
     // Basic welcome route
     app.get('/', (req, res) => {
-      res.json({ message: 'Welcome to the Express TypeScript API with layered architecture' });
+      res.json({ message: 'Multiway IT API' });
     });
 
     // Start the server

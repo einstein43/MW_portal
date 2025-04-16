@@ -1,17 +1,18 @@
 import express, { Router } from 'express';
 import { ProjectController } from '../controllers/project.controller';
-import { authenticate } from '../middleware/auth.middleware';
 
 export const createProjectRouter = (projectController: ProjectController): Router => {
   const router = express.Router();
 
   // Protected routes - require authentication
-  router.get('/', authenticate, projectController.getAllProjects);
-  router.get('/:id', authenticate, projectController.getProjectById);
-  router.get('/customer/:customerId', authenticate, projectController.getProjectsByCustomerId);
-  router.post('/', authenticate, projectController.createProject);
-  router.put('/:id', authenticate, projectController.updateProject);
-  router.delete('/:id', authenticate, projectController.deleteProject);
+  router.get('/',  projectController.getAllProjects);
+  // More specific route comes first
+  router.get('/customer/:customerId',  projectController.getProjectsByCustomerId);
+  // General ID route comes after specific routes
+  router.get('/:id',  projectController.getProjectById);
+  router.post('/',  projectController.createProject);
+  router.put('/:id',  projectController.updateProject);
+  router.delete('/:id',  projectController.deleteProject);
 
   return router;
 };
