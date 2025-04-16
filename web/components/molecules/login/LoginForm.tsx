@@ -11,7 +11,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onLoginSuccess, 
   onLoginError 
 }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +22,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     setIsLoading(true);
 
     try {
-      const user = await AuthService.login({ username, password });
+      const user = await AuthService.login({ email, password });
       
       if (user) {
         if (onLoginSuccess) {
@@ -52,12 +52,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
       {error && <div className={styles.error}>{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className={styles.formGroup}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
             disabled={isLoading}
           />

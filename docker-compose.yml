@@ -48,9 +48,17 @@ services:
     restart: unless-stopped
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://api:3002/api
+      - NEXT_PUBLIC_API_URL=http://localhost:3003/api
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+      - NEXT_NO_TURBO=1
     ports:
       - "3001:3000"
+    volumes:
+      - ./web:/app:cached
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev:watch
     depends_on:
       - api
     networks:

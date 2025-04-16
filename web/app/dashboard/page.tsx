@@ -27,27 +27,27 @@ export default function Dashboard() {
         <header className={styles.header}>
           <h1>Dashboard</h1>
           <button className={styles.logoutButton} onClick={handleLogout}>
-            Logout
+            Uitloggen
           </button>
         </header>
 
         <div className={styles.content}>
           {loading ? (
-            <div>Loading...</div>
+            <div>Laden...</div>
           ) : (
             <>
               <div className={styles.welcomeMessage}>
-                <h2>Welcome, {user?.username}!</h2>
-                <p>You are now signed in to your account.</p>
+                <h2>Welkom {user?.email?.split('@')[0] || 'User'}!</h2>
+                <p>TEST!!</p>
               </div>
 
               <div className={styles.dashboardCard}>
-                <h3>Your Profile</h3>
+                <h3>Gegevens</h3>
                 {user && (
                   <div className={styles.profileInfo}>
-                    <p><strong>Username:</strong> {user.username}</p>
                     <p><strong>Email:</strong> {user.email}</p>
                     <p><strong>User ID:</strong> {user.id}</p>
+                    
                   </div>
                 )}
               </div>
