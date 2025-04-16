@@ -1,0 +1,81 @@
+.dashboardContainer {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.logoutButton {
+  background-color: #f56565;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logoutButton:hover {
+  background-color: #e53e3e;
+}
+
+.content {
+  padding: 1rem;
+}
+
+.welcomeMessage {
+  margin-bottom: 2rem;
+}
+
+.welcomeMessage h2 {
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.welcomeMessage p {
+  color: #666;
+}
+
+.dashboardCard {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.dashboardCard h3 {
+  margin-bottom: 1rem;
+  color: #333;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.5rem;
+}
+
+.profileInfo p {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .dashboardContainer {
+    padding: 1rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .logoutButton {
+    align-self: flex-end;
+  }
+}

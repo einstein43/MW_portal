@@ -32,6 +32,23 @@
   flex-direction: column;
   gap: 32px;
   grid-row-start: 2;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0.5rem 0 1.5rem;
+  max-width: 36rem;
 }
 
 .main ol {
@@ -59,6 +76,7 @@
 .ctas {
   display: flex;
   gap: 16px;
+  margin-top: 1rem;
 }
 
 .ctas a {
@@ -79,6 +97,7 @@
   font-size: 16px;
   line-height: 20px;
   font-weight: 500;
+  text-decoration: none;
 }
 
 a.primary {
@@ -136,6 +155,14 @@ a.secondary {
     align-items: center;
   }
 
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
   .main ol {
     text-align: center;
   }
@@ -164,5 +191,9 @@ a.secondary {
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();
+  }
+
+  .description {
+    color: #bbb;
   }
 }

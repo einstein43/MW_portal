@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-// This is a simplified version for demonstration
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // In production, use environment variables
+
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    username: string;
+  };
+}
+
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
@@ -17,16 +26,18 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
   }
 
   try {
-    // In a real app, you'd verify the token with JWT or another method
-    if (token === 'demo-token') {
-      // Mock user data that would normally come from token verification
-      (req as any).user = { id: '1', username: 'testuser' };
-      next();
-    } else {
-      res.status(401).json({ message: 'Invalid token' });
-    }
+    // Verify the token
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; username: string };
+    
+    // Add user data to request
+    (req as AuthRequest).user = {
+      id: decoded.id,
+      username: decoded.username
+    };
+    
+    next();
   } catch (error) {
     console.error('Authentication error:', error);
-    res.status(500).json({ message: 'Authentication failed' });
+    res.status(401).json({ message: 'Invalid token' });
   }
 };

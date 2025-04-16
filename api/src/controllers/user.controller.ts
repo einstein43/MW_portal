@@ -1,8 +1,49 @@
 import { Request, Response } from 'express';
 import { UserService } from '../services/user.service';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'; // In production, use environment variables
 
 export class UserController {
   constructor(private userService: UserService) {}
+
+  login = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        res.status(400).json({ message: 'Username and password are required' });
+        return;
+      }
+
+      const user = await this.userService.authenticateUser(username, password);
+      
+      if (!user) {
+        res.status(401).json({ message: 'Invalid credentials' });
+        return;
+      }
+
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        JWT_SECRET,
+        { expiresIn: '24h' }
+      );
+
+      res.status(200).json({
+        message: 'Login successful',
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email
+        }
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Error during login process' });
+    }
+  };
 
   getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {

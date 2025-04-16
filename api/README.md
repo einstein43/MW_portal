@@ -1,6 +1,14 @@
 # API Folder - Express.js with TypeScript
 
-This directory contains an Express.js API built with TypeScript.
+## Summary of Recent Work
+(Updated April 16, 2025)
+
+Recent development on the API backend has focused on:
+- Implementation of user authentication system with middleware protection
+- Development of a layered architecture (controllers, services, repositories)
+- Creation of user management endpoints (registration, login, profile)
+- Implementation of secure token-based authentication
+- Integration with the frontend application for seamless data flow
 
 ## Setup Summary
 
