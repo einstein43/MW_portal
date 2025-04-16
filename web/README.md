@@ -35,6 +35,51 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - `public/`: Static files like images and icons
 - `src/`: Source code for the application (components, hooks, utilities)
 
+## Component Architecture: Atomic Design
+
+This project follows the Atomic Design methodology for organizing and structuring the UI components, which can be found in the `/components` directory.
+
+### What is Atomic Design?
+
+Atomic Design is a methodology created by Brad Frost that breaks down interfaces into fundamental building blocks and combines them to create more complex UI components. This methodology helps in creating consistent, maintainable, and scalable design systems.
+
+The component hierarchy consists of:
+
+1. **Atoms** (`/components/atoms`): 
+   - The smallest, indivisible UI elements
+   - Examples: buttons, inputs, labels, icons
+   - These are the foundational building blocks that can't be broken down further
+
+2. **Molecules** (`/components/molecules`): 
+   - Simple combinations of atoms that function together as a unit
+   - Examples: form fields (label + input), search bars, navigation items
+   - These are relatively simple components with limited functionality
+
+3. **Organisms** (`/components/organisms`): 
+   - Complex UI components composed of molecules and/or atoms
+   - Examples: headers, forms, sidebars, feature sections
+   - These are distinctive sections of an interface
+
+4. **Templates** (`/components/templates`): 
+   - Page-level structures focusing on the arrangement of components
+   - These define content structure without specific content implementation
+   - Examples: page layouts, grid systems
+
+By organizing components this way, we achieve:
+- Better reusability and consistency
+- Clear component hierarchy and relationships
+- Easier maintenance and implementation of design systems
+- Improved collaboration between designers and developers
+
+### Usage Guidelines
+
+When creating new UI components, consider:
+1. Where the component fits in the hierarchy
+2. Potential for reuse across the application
+3. How the component might be combined with others to form more complex structures
+
+For more information on Atomic Design, refer to [Brad Frost's Atomic Design methodology](https://atomicdesign.bradfrost.com/).
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
