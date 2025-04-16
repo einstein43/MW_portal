@@ -12,7 +12,7 @@ const prisma = new PrismaClient({
 // Initialize the client immediately
 prisma.$connect()
   .then(() => console.log('PrismaClient connected successfully'))
-  .catch(e => console.error('PrismaClient connection error:', e));
+  .catch((e: unknown) => console.error('PrismaClient connection error:', e));
 
 export interface UserRepository {
   findAll(): Promise<User[]>;

@@ -8,13 +8,16 @@
     "dev": "set PORT=3002 && ts-node src/index.ts",
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "db:init": "ts-node src/scripts/db-init.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^5.10.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
@@ -27,6 +30,6 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "prisma": "^6.6.0"
+    "prisma": "^5.10.2"
   }
 }
