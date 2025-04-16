@@ -3,23 +3,26 @@ set -e
 
 # Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
-sleep 15  # Increased wait time to ensure MySQL is fully ready
+while ! nc -z mysql 3306; do
+  sleep 1
+done
+echo "MySQL is ready"
 
 # Run Prisma migrations
 echo "Running Prisma migrations..."
 npx prisma migrate deploy
 
-# Ensure Prisma client is properly generated
-echo "Ensuring Prisma client is properly generated..."
-npx prisma generate
+# Generate Prisma client - ensure it's properly generated with verbose output
+echo "Generating Prisma client..."
+npx prisma generate --schema=./prisma/schema.prisma
 
-# Allow some time for the Prisma client to be fully initialized
-echo "Allowing time for Prisma client initialization..."
-sleep 2
-
-# Initialize the database
-echo "Initializing database..."
-npx ts-node src/scripts/db-init.ts
+# Verify the Prisma client was created
+if [ -d "./node_modules/.prisma/client" ]; then
+  echo "Prisma client generated successfully"
+else
+  echo "ERROR: Prisma client generation failed. Directory not found."
+  exit 1
+fi
 
 # Start the application
 echo "Starting the application..."

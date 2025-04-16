@@ -1,5 +1,18 @@
 import { User } from '../models/user.model';
+ 
 import { PrismaClient } from '@prisma/client';
+
+// Create a single PrismaClient instance to be reused
+// This approach doesn't rely on global variables that might not work in all environments
+const prisma = new PrismaClient({
+  // Enable logging in development environment
+  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+});
+
+// Initialize the client immediately
+prisma.$connect()
+  .then(() => console.log('PrismaClient connected successfully'))
+  .catch(e => console.error('PrismaClient connection error:', e));
 
 export interface UserRepository {
   findAll(): Promise<User[]>;
@@ -69,36 +82,30 @@ export class MockUserRepository implements UserRepository {
 
 // Implement Prisma-based repository
 export class PrismaUserRepository implements UserRepository {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return prisma.user.findMany();
   }
 
   async findById(id: number): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: { id }
     });
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findUnique({
+    return prisma.user.findUnique({
       where: { email }
     });
   }
 
   async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
-    return this.prisma.user.create({
+    return prisma.user.create({
       data: userData
     });
   }
 
   async update(id: number, userData: Partial<User>): Promise<User | null> {
-    return this.prisma.user.update({
+    return prisma.user.update({
       where: { id },
       data: userData
     });
@@ -106,7 +113,7 @@ export class PrismaUserRepository implements UserRepository {
 
   async delete(id: number): Promise<boolean> {
     try {
-      await this.prisma.user.delete({
+      await prisma.user.delete({
         where: { id }
       });
       return true;
