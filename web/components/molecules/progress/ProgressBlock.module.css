@@ -1,0 +1,50 @@
+.progressBlock {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.progressBlock h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.projectItem {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f9f9f9;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.projectItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.projectItem h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.progressInfo {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.progressLabel {
+  font-weight: 600;
+  width: 100px;
+  color: #555;
+}
+
+.progressValue {
+  flex: 1;
+  color: #333;
+}

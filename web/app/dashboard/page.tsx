@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { AuthService, User } from '../../services/auth.service';
-import ProtectedRoute from '../../components/organisms/ProtectedRoute';
-import styles from './page.module.css';
+import { useState, useEffect } from "react";
+import { AuthService, User } from "../../services/auth.service";
+import ProtectedRoute from "../../components/organisms/ProtectedRoute";
+import styles from "./page.module.css";
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   const handleLogout = () => {
     AuthService.logout();
-    window.location.href = '/login';
+    window.location.href = "/login";
   };
 
   return (
@@ -26,9 +26,20 @@ export default function Dashboard() {
       <div className={styles.dashboardContainer}>
         <header className={styles.header}>
           <h1>Dashboard</h1>
-          <button className={styles.logoutButton} onClick={handleLogout}>
-            Uitloggen
-          </button>
+          <div className={styles.userInfo}>
+            <div className={styles.dashboardCard}>
+              {user && (
+                <><h3>Welkom {user.firstName} !</h3>
+                <div className={styles.profileInfo}>
+                  
+                  <p>{user.email}</p>
+                </div></>
+              )}
+            </div>
+            <button className={styles.logoutButton} onClick={handleLogout}>
+              Uitloggen
+            </button>
+          </div>
         </header>
 
         <div className={styles.content}>
@@ -37,19 +48,8 @@ export default function Dashboard() {
           ) : (
             <>
               <div className={styles.welcomeMessage}>
-                <h2>Welkom {user?.email?.split('@')[0] || 'User'}!</h2>
+                <h2>Welkom {user?.email?.split("@")[0] || "User"}!</h2>
                 <p>TEST!!</p>
-              </div>
-
-              <div className={styles.dashboardCard}>
-                <h3>Gegevens</h3>
-                {user && (
-                  <div className={styles.profileInfo}>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>User ID:</strong> {user.id}</p>
-                    
-                  </div>
-                )}
               </div>
             </>
           )}

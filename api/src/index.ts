@@ -1,8 +1,12 @@
 import express from 'express';
 import { PrismaUserRepository } from './repositories/user.repository';
+import { PrismaProjectRepository } from './repositories/project.repository';
 import { UserService } from './services/user.service';
+import { ProjectService } from './services/project.service';
 import { UserController } from './controllers/user.controller';
+import { ProjectController } from './controllers/project.controller';
 import { createUserRouter } from './routes/user.routes';
+import { createProjectRouter } from './routes/project.routes';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
 
@@ -36,8 +40,14 @@ async function startServer() {
     const userService = new UserService(userRepository);
     const userController = new UserController(userService);
 
+    // Initialize project dependencies
+    const projectRepository = new PrismaProjectRepository();
+    const projectService = new ProjectService(projectRepository);
+    const projectController = new ProjectController(projectService);
+
     // Setup routes
     app.use('/api/users', createUserRouter(userController));
+    app.use('/api/projects', createProjectRouter(projectController));
 
     // Basic welcome route
     app.get('/', (req, res) => {
